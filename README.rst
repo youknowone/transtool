@@ -15,7 +15,7 @@ Command::
 Input (input.txt)::
 
     여러 해 동안 모아 온 다양한 {{tip}}, {{trick}}, {{pattern}}, {{code}} {{snippet}}, {{technique을}} 소개합니다.
-    잠깐, {{dict: value}, {dict: value}} 같은 {{python:dictionary는}} 예외입니다.
+    잠깐, {{dict: value}, {dict: value}} 같은 {{python:dictionary은}} 예외입니다.
 
 Output::
 
