@@ -21,7 +21,7 @@ def get_readme():
 setup(
     name='transtool',
     version=get_version(),
-    description='Transtool is dictionary-rewritting-base general-purpose translation copilier',
+    description='transtool is dictionary-rewritting-base general-purpose translation copilier',
     long_description=get_readme(),
     author='Jeong YunWon',
     author_email='jeong+transtool@youknowone.org',
