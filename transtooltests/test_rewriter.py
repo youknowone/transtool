@@ -11,5 +11,6 @@ def test_rewriter():
     rewriter = Rewriter(wordpack, PythonParser)
 
     resolved = rewriter.resolve(sentence)
-    print resolved
+    #print resolved
     assert resolved == u'여러 해 동안 모아 온 다양한 팁, 트릭, 패턴, 코드 스니펫, 테크닉을 소개합니다.\n잠깐, {{dict: value}, {dict: value}} 같은 딕셔너리는 예외입니다.\n'
+    return rewriter
