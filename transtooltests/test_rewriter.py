@@ -4,10 +4,10 @@ from transtool.rewriter import Rewriter
 from transtool.parser import PythonParser
 
 from test_parser import sentence
-from test_dictionary import test_dictionary
+from test_dictionary import test_korean_dictionary
 
 def test_rewriter():
-    wordpack = test_dictionary()
+    wordpack = test_korean_dictionary()
     rewriter = Rewriter(wordpack, PythonParser)
 
     resolved = rewriter.resolve(sentence)

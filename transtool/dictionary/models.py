@@ -1,4 +1,5 @@
 
+# -*- coding: utf-8 -*-
 from . import exc
 
 class Word(object):
@@ -11,6 +12,11 @@ class Word(object):
     def __repr__(self):
         return u'<Word:{tag}:{source}=>{candidate}>'.format(tag=self.tag if self.tag else u'', source=self.source, candidate=self.candidate)
 
+    def copy(self, source=False, candidate=False, tag=False):
+        nsource = source if source is not False else self.source
+        ncandidate = candidate if candidate is not False else self.candidate
+        ntag = tag if tag is not False else self.tag
+        return Word(nsource, ncandidate, ntag)
 
 class Dictionary(object):
     def __init__(self, tag=None):
@@ -71,3 +77,36 @@ class Package(object):
         if not result:
             raise exc.MultipleCandidates(source=source)
         return result
+
+korean_makers = [
+    (u'은', u'는'),
+    (u'이', u'가'),
+    (u'을', u'를'),
+    (u'과', u'와'),
+    (u'로', u'으로'),
+]
+
+class KoreanPackage(Package):
+    def add_index(self, word, tag=None):
+        super(KoreanPackage, self).add_index(word, tag)
+        self.linearpool.append((word, tag))
+
+    def build_index(self):
+        i_ga = ord(u'가')
+        i_hih = ord(u'힣')
+        self.linearpool = []
+        super(KoreanPackage, self).build_index()
+        pool = self.linearpool[:]
+        for word, tag in pool:
+            charval = ord(word.candidate[-1])
+            if not (i_ga <= charval <= i_hih):
+                continue
+            jongval = (charval - i_ga) % 28
+            for makers in korean_makers:
+                maker = makers[0] if jongval else makers[1]
+                for dmaker in makers:
+                    kword = word.copy(source=word.source + dmaker,
+                                      candidate=word.candidate + maker)
+                    if kword.source not in self.word_index and\
+                            (tag is None or kword.source not in self.tag_index[tag]):
+                        self.add_index(kword, tag)
