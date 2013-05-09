@@ -64,9 +64,10 @@ class Package(object):
         try:
             if tag is not None:
                 result = self.tag_index[tag][source]
-            result = self.word_index[source]
+            else:
+                result = self.word_index[source]
         except KeyError:
-            raise exc.WordNotFound()
+            raise exc.WordNotFound(source=source)
         if not result:
-            raise exc.MultipleCandidates()
+            raise exc.MultipleCandidates(source=source)
         return result

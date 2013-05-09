@@ -10,7 +10,9 @@ class BaseParser(object):
     def __iter__(self):
         while True:
             item = self.next()
-            if item is None:
+            if item[1] is None:
+                if len(item[0]) > 0:
+                    yield item
                 break
             yield item
 

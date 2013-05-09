@@ -31,6 +31,7 @@ def test_dictionary():
         package.get('form')
     except MultipleCandidates:
         pass
+    return package
 
 if __name__ == '__main__':
     test_dictionary()
