@@ -1,4 +1,6 @@
 
+from .word import Word
+
 class BaseParser(object):
     def __init__(self, data):
         self.data = data
@@ -44,5 +46,5 @@ class PythonParser(BaseParser):
                     continue
                 word = self.data[start:self.index]
                 self.index += len(self.__closer__)
-                return word
+                return Word(word)
 
