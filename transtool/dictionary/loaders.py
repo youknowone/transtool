@@ -12,7 +12,8 @@ class INILoader(object):
         for section in self.parser.sections():
             dictionary = Dictionary(section.decode(self.charset))
             for key, val in self.parser.items(section):
-                word = Word(unicode(key, self.charset), unicode(val, self.charset))
+                ukey, uval = key.decode(self.charset), val.decode(self.charset)
+                word = Word(ukey, uval)
                 dictionary.add_word(word)
             yield dictionary
 

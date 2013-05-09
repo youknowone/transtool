@@ -1,28 +1,29 @@
 
-class DictionaryException(Exception): pass
-class WordNotFound(DictionaryException): pass
-class MultipleCandidates(DictionaryException): pass
+from . import exc
 
 class Word(object):
     def __init__(self, source, candidate, tag=None):
         self.source = source
         self.candidate = candidate
         self.tag = tag
+        assert unicode == type(self.source) == type(self.candidate)
 
     def __repr__(self):
-        return '<Word:{tag}:{source}=>{candidate}>'.format(tag=self.tag if self.tag else '', source=self.source, candidate=self.candidate.encode('utf-8'))
+        return u'<Word:{tag}:{source}=>{candidate}>'.format(tag=self.tag if self.tag else u'', source=self.source, candidate=self.candidate)
+
 
 class Dictionary(object):
     def __init__(self, tag=None):
         self.tag = tag
         self.words = []
 
+    def __repr__(self):
+        l = [word.__repr__() for word  in self.words]
+        return u'<Dictionary:[{}]>'.format(u','.join(l))
+
     def add_word(self, word):
         self.words.append(word)
 
-    def __repr__(self):
-        l = map(lambda w: w.__repr__(), self.words)
-        return '<Dictionary:[' + u','.join(l) + u']>'
 
 class Package(object):
     def __init__(self):
@@ -30,6 +31,9 @@ class Package(object):
         self.words = []
         self.tag_index = {}
         self.word_index = {}
+
+    def __repr__(self):
+        return u'<Package(dictionaries={})>'.format(self.dictionaries)
 
     def add_dictionary(self, item):
         self.dictionaries.append(item)
@@ -47,7 +51,7 @@ class Package(object):
             if not tag in self.tag_index:
                 self.tag_index[tag] = {}
             put(self.tag_index[tag], word)
-        put(self.word_index, word)    
+        put(self.word_index, word)
 
     def build_index(self):
         for dictionary in self.dictionaries:
@@ -62,7 +66,7 @@ class Package(object):
                 result = self.tag_index[tag][source]
             result = self.word_index[source]
         except KeyError:
-            raise WordNotFound()
+            raise exc.WordNotFound()
         if not result:
-            raise MultipleCandidates()
+            raise exc.MultipleCandidates()
         return result
