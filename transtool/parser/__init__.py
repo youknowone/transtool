@@ -5,6 +5,7 @@ class BaseParser(object):
     def __init__(self, data):
         self.data = data
         self.index = 0
+        self.lastindex = 0
 
     def __iter__(self):
         while True:
@@ -28,14 +29,14 @@ class PythonParser(BaseParser):
 
         opened = False
         start = None
-        while True:
+        while self.index < len(self.data):
             if not opened:
                 if not match(self.__opener__):
                     self.index += 1
                     continue
                 opened = True
-                self.index += len(self.__opener__)
                 start = self.index
+                self.index += len(self.__opener__)
             if opened:
                 if match(self.__blacklist__):
                     opened = False
@@ -44,7 +45,11 @@ class PythonParser(BaseParser):
                 if not match(self.__closer__):
                     self.index += 1
                     continue
+                sentence = self.data[self.lastindex:start]
+                start += len(self.__opener__)
                 word = self.data[start:self.index]
                 self.index += len(self.__closer__)
-                return Word(word)
-
+                self.lastindex = self.index
+                return sentence, Word(word)
+        else:
+            return self.data[self.lastindex:], None
