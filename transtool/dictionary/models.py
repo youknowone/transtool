@@ -18,6 +18,7 @@ class Word(object):
         ntag = tag if tag is not False else self.tag
         return Word(nsource, ncandidate, ntag)
 
+
 class Dictionary(object):
     def __init__(self, tag=None):
         self.tag = tag
@@ -83,7 +84,12 @@ korean_makers = [
     (u'이', u'가'),
     (u'을', u'를'),
     (u'과', u'와'),
-    (u'로', u'으로'),
+    (u'으로', u'로'),
+    (u'나', u'이나'),
+    (u'해'),
+    (u'되'),
+    (u'합'),
+    (u'됩'),
 ]
 
 class KoreanPackage(Package):
@@ -98,12 +104,14 @@ class KoreanPackage(Package):
         super(KoreanPackage, self).build_index()
         pool = self.linearpool[:]
         for word, tag in pool:
+            if len(word.candidate) == 0:
+                continue
             charval = ord(word.candidate[-1])
             if not (i_ga <= charval <= i_hih):
                 continue
             jongval = (charval - i_ga) % 28
             for makers in korean_makers:
-                maker = makers[0] if jongval else makers[1]
+                maker = makers[0] if len(makers) == 1 else makers[0] if jongval else makers[1]
                 for dmaker in makers:
                     kword = word.copy(source=word.source + dmaker,
                                       candidate=word.candidate + maker)
